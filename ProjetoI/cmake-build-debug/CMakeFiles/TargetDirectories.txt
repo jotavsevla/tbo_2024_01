@@ -1,0 +1,3 @@
+/Users/jotavsevla/CLionProjects/tbo_2024_01/ProjetoI/cmake-build-debug/CMakeFiles/ProjetoI.dir
+/Users/jotavsevla/CLionProjects/tbo_2024_01/ProjetoI/cmake-build-debug/CMakeFiles/edit_cache.dir
+/Users/jotavsevla/CLionProjects/tbo_2024_01/ProjetoI/cmake-build-debug/CMakeFiles/rebuild_cache.dir
