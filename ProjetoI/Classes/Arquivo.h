@@ -9,7 +9,6 @@
 #include "sstream"
 #include "fstream"
 #define MAX 638831 // ultimo valor que a hashFilme() é capaz de gerar
-#define FILMESARQ "../arquivosTexto/filmes.txt"
 using namespace std;
 
 class Arquivo {
@@ -18,13 +17,13 @@ public:
     vector<Cinema> cinemas;
     string arquivo;
 
-    Arquivo(const string& nomeArquivo) : arquivo(FILMESARQ) {}
+    Arquivo(const string& nomeArquivo) : arquivo(nomeArquivo) {}
 
-    void lerArquivo() {
+    int lerArquivo() {
         ifstream file(arquivo);
 
         if (!file.is_open())
-            return;
+            return 1;
 
         filmes.reserve(MAX);
         string linha;
@@ -46,6 +45,7 @@ public:
             int endY = (endYear != "\\N") ? stoi(endYear) : -1;
             int runTime = (runtimeMinutes != "\\N") ? stoi(runtimeMinutes) : -1;
             bool adult = (isAdult == "1");
+            cout << t_const << titleType<< primaryTitle<< originalTitle<< adult<<startY<<endY<<runTime<<genres;
             vector<string> genresVec; // Clear genresVec for each iteration
             stringstream genresStream(genres); // Create genresStream after genres is populated
             string genre;

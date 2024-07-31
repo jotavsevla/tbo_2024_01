@@ -1,6 +1,8 @@
 #include <iostream>
-
+#include "Classes/Arquivo.h"
+#define FILMESARQ "..\arquivosTexto\filmes.txt"
 int main() {
-    std::cout << "Hello, World!" << std::endl;
+    Arquivo filmes(FILMESARQ);
+    filmes.lerArquivo();
     return 0;
 }
