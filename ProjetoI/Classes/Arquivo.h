@@ -4,21 +4,18 @@
 
 #ifndef TBO_2024_01_ARQUIVO_H
 #define TBO_2024_01_ARQUIVO_H
-#include "string"
-#include "vector"
-#include "utility"
-#include "string"
-#include "iostream"
+#include "Filme.h"
+#include "Cinema.h"
 #include "sstream"
 #include "fstream"
-#include "Filme.h"
-#define MAX 638832
+#define MAX 638831 // ultimo valor que a hashFilme() é capaz de gerar
 #define FILMESARQ "../arquivosTexto/filmes.txt"
 using namespace std;
 
 class Arquivo {
 public:
     vector<Filme> filmes;
+    vector<Cinema> cinemas;
     string arquivo;
 
     Arquivo(const string& nomeArquivo) : arquivo(FILMESARQ) {}
@@ -49,9 +46,8 @@ public:
             int endY = (endYear != "\\N") ? stoi(endYear) : -1;
             int runTime = (runtimeMinutes != "\\N") ? stoi(runtimeMinutes) : -1;
             bool adult = (isAdult == "1");
-            // Converte a string de gêneros em um vetor de strings
-            vector<string> genresVec;
-            stringstream genresStream(genres);
+            vector<string> genresVec; // Clear genresVec for each iteration
+            stringstream genresStream(genres); // Create genresStream after genres is populated
             string genre;
             while (getline(genresStream, genre, ','))
                 genresVec.push_back(genre);
@@ -60,6 +56,9 @@ public:
         }
         file.close();
     }
+    Filme getFilmePorId(int codeId){ return filmes[codeId];}
+    Cinema getCinemaPorId(int codeId){ return cinemas[codeId];}
+
 };
 
 

@@ -40,7 +40,7 @@ int hashFilme(string t_const) {
     // Supondo que o código de identidade do filme comece com "tt", vamos extrair o número após "tt"
     string numero_str = t_const.substr(2);  // Remove os dois primeiros caracteres "tt"
     int index = stoi(numero_str);  // Converte a parte numérica para inteiro
-
+    if(index==INICIAL)return 0;
     // Calcular o índice sequencial com base na diferença em relação ao primeiro filme
     index = (index - INICIAL) / 2;  // Calcula o índice sequencial conforme a fórmula
     return index;

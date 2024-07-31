@@ -31,10 +31,6 @@ public:
     vector<int> getMoviePosterId() const { return moviePosterId; }
     pair<double, double> getCoordinate() const { return cordinate; }
     int getTicketValue() const { return ticketValue; }
-
-
-
-
 };
 
 
