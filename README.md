@@ -359,7 +359,7 @@ pip install matplotlib numpy
 ### Clonar o repositório
 
 ```bash
-git clone <url-do-repositorio>
+git clone https://github.com/jotavsevla/tbo.git
 cd tbo
 ```
 
@@ -395,6 +395,57 @@ Consulte a seção específica de cada projeto acima para instruções de compil
 - Encapsulamento e modularização
 - Análise de complexidade assintótica
 - Validação experimental de complexidade teórica
+
+---
+
+## Auditoria técnica
+
+Este repositório reúne snapshots acadêmicos independentes. As complexidades acima descrevem os algoritmos pretendidos; elas não substituem testes de invariantes, sanitizers ou medições reproduzíveis.
+
+### Propriedade e alocação de memória
+
+- as listas ligadas alocam nós com `new` e oferecem `limpar()`, mas não possuem destrutor que o invoque. Se o chamador esquecer a limpeza, os nós vazam;
+- as classes proprietárias de ponteiros também não definem cópia/movimento. Copiá-las por valor pode duplicar a propriedade e causar comportamento indefinido;
+- `RedBlackTree` usa `shared_ptr` tanto para filhos quanto para o pai. O ponteiro de volta cria ciclos de referência e impede a liberação automática dos nós. O pai deveria ser `weak_ptr` ou a árvore deveria usar propriedade exclusiva;
+- o Projeto II aloca uma `string` com `new` apenas para devolvê-la ao chamador. Retorno por valor/`optional` expressa melhor a propriedade e evita `delete` manual.
+
+### Busca, hash e limites
+
+- `TabelaHash::procuraNaHash` verifica um elemento antes de confirmar que o índice está dentro da quantidade atual, permitindo acesso fora dos limites;
+- `reserve(HASH_MAX)` antecipa uma capacidade grande e fixa. Isso reduz rehash, mas pode consumir memória muito antes da necessidade real;
+- hash oferece `O(1)` **médio**, não garantido; colisões e fator de carga devem fazer parte da análise;
+- KMP exato é `O(n + m)`, enquanto a variação de wildcard tenta posições sucessivas e pode chegar a `O(n × m)`;
+- Levenshtein usa matriz completa: `O(n × m)` em tempo e memória. Como só a linha anterior é necessária, o espaço pode cair para `O(min(n,m))`;
+- rotinas de busca acessam a primeira posição de padrão/palavra sem contrato claro para string vazia.
+
+### Ordenação e experimento
+
+- Insertion Sort é estável e adaptativo; Selection Sort faz `O(n²)` comparações independentemente da ordem;
+- a contagem de “acessos à memória” do Trabalho II é uma métrica didática definida pelo próprio programa, não uma medição de cache, tempo de CPU ou tráfego real;
+- para comparar algoritmos, fixe seed, repita amostras, registre compilador/flags e reporte variância.
+
+### Dívida de repositório
+
+Há binários, diretórios de build e metadados de IDE versionados. Eles aumentam o clone, misturam fonte com artefato e podem esconder diferenças de plataforma. O ideal é removê-los em uma mudança própria, com `.gitignore` e build reproduzível.
+
+### Estado de compilação observado
+
+- `ProjetoI`, `ProjetoII` e `TrabalhoII` foram compilados diretamente com Clang/C++11;
+- `ProjetoI` ainda emite alertas relevantes: função sem retorno em todos os caminhos, variável não inicializada e recursão que o compilador identifica como potencialmente infinita;
+- as três variantes de `TrabalhoI` falham na linkedição quando compiladas pelos comandos documentados, porque `insertRandom` é definido em header sem `inline` e aparece em mais de uma unidade de tradução;
+- há diversos avisos de comparação entre inteiros assinados e `size_t`.
+
+Assim, “compilar” e “executar com segurança” variam por subprojeto; os comandos históricos de Trabalho I precisam ser corrigidos junto com a organização dos headers.
+
+## Próximos passos prioritários
+
+1. aplicar RAII (`unique_ptr`, destrutores e Regra dos Cinco) nas estruturas proprietárias;
+2. trocar o ponteiro de pai da árvore para `weak_ptr`;
+3. corrigir limites da tabela hash e entradas vazias;
+4. mover implementações de funções livres para um único `.cpp` ou marcá-las `inline`, eliminando símbolos duplicados;
+5. adicionar testes de invariantes e builds com ASan/UBSan;
+6. tornar datasets e seeds parâmetros;
+7. limpar artefatos compilados em uma revisão separada.
 
 ---
 
